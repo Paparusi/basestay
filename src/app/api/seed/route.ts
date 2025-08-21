@@ -35,7 +35,6 @@ export async function POST() {
         checkInTime: '15:00',
         checkOutTime: '11:00',
         ownerAddress: testUser.walletAddress,
-        ownerId: testUser.id,
         isActive: true
       },
       {
@@ -53,7 +52,6 @@ export async function POST() {
         checkInTime: '14:00',
         checkOutTime: '12:00',
         ownerAddress: testUser.walletAddress,
-        ownerId: testUser.id,
         isActive: true
       },
       {
@@ -71,7 +69,6 @@ export async function POST() {
         checkInTime: '16:00',
         checkOutTime: '10:00',
         ownerAddress: testUser.walletAddress,
-        ownerId: testUser.id,
         isActive: true
       },
       {
@@ -89,7 +86,6 @@ export async function POST() {
         checkInTime: '15:00',
         checkOutTime: '11:00',
         ownerAddress: testUser.walletAddress,
-        ownerId: testUser.id,
         isActive: true
       }
     ]
