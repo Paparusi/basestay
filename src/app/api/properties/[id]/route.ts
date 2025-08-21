@@ -72,7 +72,7 @@ export async function GET(
 // DELETE - Delete property by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id: propertyId } = await params
@@ -115,7 +115,7 @@ export async function DELETE(
 // PUT - Update property by ID
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id: propertyId } = await params

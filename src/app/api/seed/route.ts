@@ -7,10 +7,10 @@ export async function POST() {
   try {
     // Create test user first
     const testUser = await prisma.user.upsert({
-      where: { address: '0x1234567890123456789012345678901234567890' },
+      where: { walletAddress: '0x1234567890123456789012345678901234567890' },
       update: {},
       create: {
-        address: '0x1234567890123456789012345678901234567890',
+        walletAddress: '0x1234567890123456789012345678901234567890',
         displayName: 'Test User',
         email: 'test@example.com',
         isVerified: true,
@@ -34,7 +34,7 @@ export async function POST() {
         amenities: ['WiFi', 'Air Conditioning', 'Kitchen'],
         checkInTime: '15:00',
         checkOutTime: '11:00',
-        ownerAddress: testUser.address,
+        ownerAddress: testUser.walletAddress,
         ownerId: testUser.id,
         isActive: true
       },
@@ -52,7 +52,7 @@ export async function POST() {
         amenities: ['WiFi', 'Air Conditioning'],
         checkInTime: '14:00',
         checkOutTime: '12:00',
-        ownerAddress: testUser.address,
+        ownerAddress: testUser.walletAddress,
         ownerId: testUser.id,
         isActive: true
       },
@@ -70,7 +70,7 @@ export async function POST() {
         amenities: ['WiFi', 'Pool', 'Garden', 'Parking'],
         checkInTime: '16:00',
         checkOutTime: '10:00',
-        ownerAddress: testUser.address,
+        ownerAddress: testUser.walletAddress,
         ownerId: testUser.id,
         isActive: true
       },
@@ -88,7 +88,7 @@ export async function POST() {
         amenities: ['WiFi', 'Traditional Decor'],
         checkInTime: '15:00',
         checkOutTime: '11:00',
-        ownerAddress: testUser.address,
+        ownerAddress: testUser.walletAddress,
         ownerId: testUser.id,
         isActive: true
       }
