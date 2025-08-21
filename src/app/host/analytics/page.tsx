@@ -11,7 +11,6 @@ import {
   CalendarDaysIcon,
   CurrencyDollarIcon,
   StarIcon,
-  EyeIcon,
   HomeIcon,
   UserGroupIcon
 } from '@heroicons/react/24/outline'
@@ -206,7 +205,7 @@ export default function HostAnalytics() {
             <div className="flex items-center space-x-4">
               <select
                 value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value as any)}
+                onChange={(e) => setSelectedPeriod(e.target.value as '3m' | '6m' | '1y')}
                 className="border border-gray-300 rounded-md px-3 py-2 text-sm"
               >
                 <option value="3m">Last 3 Months</option>
@@ -358,7 +357,7 @@ export default function HostAnalytics() {
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Monthly Performance</h3>
             <div className="space-y-4">
-              {analytics.monthlyData.map((data, index) => (
+              {analytics.monthlyData.map((data) => (
                 <div key={data.month} className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 text-sm font-medium text-gray-700">

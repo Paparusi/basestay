@@ -40,7 +40,7 @@ const amenitiesList = [
 
 export default function AddProperty() {
   const router = useRouter()
-  const { isConnected, address } = useWeb3()
+  const { isConnected } = useWeb3()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   
@@ -73,7 +73,7 @@ export default function AddProperty() {
     )
   }
 
-  const handleInputChange = (field: keyof PropertyForm, value: any) => {
+  const handleInputChange = (field: keyof PropertyForm, value: string | number | string[]) => {
     setFormData(prev => ({
       ...prev,
       [field]: value

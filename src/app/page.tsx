@@ -6,8 +6,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { 
   MagnifyingGlassIcon, 
-  UserGroupIcon, 
-  CalendarDaysIcon,
   ShieldCheckIcon,
   MapPinIcon,
   HeartIcon,

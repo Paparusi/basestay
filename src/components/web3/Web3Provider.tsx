@@ -40,12 +40,18 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
       setIsConnecting(true)
       
       // Check if Base Account SDK is loaded
-      if (!(window as any).createBaseAccountSDK) {
+      if (!(window as unknown as { createBaseAccountSDK?: () => { getProvider: () => unknown } }).createBaseAccountSDK) {
         throw new Error('Base Account SDK not loaded. Please refresh the page.')
       }
       
       // Initialize Base Account SDK using global window object (as per Base docs)
-      const provider = (window as any).createBaseAccountSDK({
+      const provider = (window as unknown as { 
+        createBaseAccountSDK: (config: { appName: string; appLogoUrl: string }) => { 
+          getProvider: () => { 
+            request: (params: { method: string; params?: unknown[] }) => Promise<unknown> 
+          } 
+        }
+      }).createBaseAccountSDK({
         appName: BASE_ACCOUNT_CONFIG.appName,
         appLogoUrl: BASE_ACCOUNT_CONFIG.appLogoUrl,
       }).getProvider()

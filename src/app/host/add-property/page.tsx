@@ -10,8 +10,7 @@ import {
   PhotoIcon,
   MapPinIcon,
   CurrencyDollarIcon,
-  UserGroupIcon,
-  BuildingOfficeIcon
+  UserGroupIcon
 } from '@heroicons/react/24/outline'
 
 interface PropertyFormData {
@@ -83,7 +82,7 @@ export default function AddPropertyPage() {
   const [error, setError] = useState<string | null>(null)
   const [currentStep, setCurrentStep] = useState(1)
 
-  const handleInputChange = (field: keyof PropertyFormData, value: any) => {
+  const handleInputChange = (field: keyof PropertyFormData, value: string | number | boolean | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 

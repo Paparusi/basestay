@@ -95,7 +95,7 @@ export function parseLocationSearch(searchText: string): {
   let confidence = 0
   
   // Try to match city
-  for (const [key, locationData] of Object.entries(VIETNAM_LOCATIONS)) {
+  for (const [, locationData] of Object.entries(VIETNAM_LOCATIONS)) {
     const cityName = normalizeVietnameseText(locationData.city)
     const aliases = locationData.aliases.map(alias => normalizeVietnameseText(alias))
     
@@ -160,7 +160,7 @@ export function buildSmartLocationQuery(searchText: string) {
   if (!searchText.trim()) return {}
   
   // Parse location with Vietnamese support
-  const parsed = parseLocationSearch(searchText)
+  parseLocationSearch(searchText)
   const queries = []
   
   // Create flexible search terms

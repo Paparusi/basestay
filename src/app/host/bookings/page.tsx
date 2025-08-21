@@ -4,14 +4,11 @@ import { useState, useEffect } from 'react'
 import { useWeb3 } from '@/components/web3/Web3Provider'
 import Link from 'next/link'
 import { 
-  HomeIcon,
   ArrowLeftIcon,
   CalendarDaysIcon,
   UserIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
   ChatBubbleLeftIcon,
   EyeIcon
 } from '@heroicons/react/24/outline'
@@ -51,7 +48,7 @@ export default function HostBookings() {
   const { isConnected, address } = useWeb3()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed'>('all')
+  const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all')
 
   useEffect(() => {
     if (isConnected) {
@@ -210,7 +207,7 @@ export default function HostBookings() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setFilter(tab.id as any)}
+                onClick={() => setFilter(tab.id as 'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled')}
                 className={`${
                   filter === tab.id
                     ? 'border-blue-500 text-blue-600'

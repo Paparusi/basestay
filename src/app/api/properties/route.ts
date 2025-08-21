@@ -58,14 +58,14 @@ export async function GET(request: NextRequest) {
     })
 
     // Calculate stats for each property
-    const propertiesWithStats = properties.map((property: any) => {
+    const propertiesWithStats = properties.map((property: { bookings: { totalPrice: string | number }[]; reviews: { rating: number }[]; [key: string]: unknown }) => {
       const totalBookings = property.bookings.length
       const totalEarnings = property.bookings.reduce(
-        (sum: number, booking: any) => sum + Number(booking.totalPrice), 
+        (sum: number, booking: { totalPrice: string | number }) => sum + Number(booking.totalPrice), 
         0
       )
       const avgRating = property.reviews.length > 0 
-        ? property.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / property.reviews.length
+        ? property.reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0) / property.reviews.length
         : 0
 
       return {

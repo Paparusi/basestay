@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 // GET - Get single property by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id: propertyId } = await params
@@ -39,11 +39,11 @@ export async function GET(
     // Calculate stats
     const totalBookings = property.bookings.length
     const totalEarnings = property.bookings.reduce(
-      (sum: number, booking: any) => sum + Number(booking.totalPrice), 
+      (sum: number, booking: { totalPrice: string | number }) => sum + Number(booking.totalPrice), 
       0
     )
     const avgRating = property.reviews.length > 0 
-      ? property.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / property.reviews.length
+      ? property.reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0) / property.reviews.length
       : 0
 
     const propertyWithStats = {
