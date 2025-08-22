@@ -4,8 +4,17 @@ import { useState } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { ConnectWallet } from '@coinbase/onchainkit/wallet'
 import HostDashboard from '@/components/dashboard/HostDashboard'
+import NoSSR from '@/components/NoSSR'
 
 export default function HostPage() {
+  return (
+    <NoSSR>
+      <HostPageContent />
+    </NoSSR>
+  )
+}
+
+function HostPageContent() {
   const { address, isConnected } = useAccount()
 
   if (!isConnected) {
