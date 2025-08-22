@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWeb3 } from '@/components/web3/Web3Provider'
+import { usePropertyListing } from '@/hooks/usePropertyListing'
 import Link from 'next/link'
 import { 
   HomeIcon,
@@ -41,6 +42,7 @@ const amenitiesList = [
 export default function AddProperty() {
   const router = useRouter()
   const { isConnected } = useWeb3()
+  const { listProperty } = usePropertyListing()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   
@@ -112,9 +114,7 @@ export default function AddProperty() {
 
     setIsSubmitting(true)
     try {
-      // Use the property listing hook with BST staking
-      const { usePropertyListing } = await import('@/hooks/usePropertyListing')
-      const { listProperty } = usePropertyListing()
+      // Use the property listing hook with BST staking - hook already initialized at component level
       
       // Convert form data to required format
       const propertyData = {
@@ -139,9 +139,10 @@ export default function AddProperty() {
         router.push('/host?tab=properties&success=property-added')
       }
       
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating property:', error)
-      alert(error.message || 'Failed to create property. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create property. Please try again.'
+      alert(errorMessage)
     } finally {
       setIsSubmitting(false)
     }

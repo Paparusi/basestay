@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       const totalBookings = property.bookings?.length || 0
       const totalReviews = property.reviews?.length || 0
       const averageRating = totalReviews > 0 
-        ? property.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / totalReviews 
+        ? property.reviews.reduce((sum: number, review: {rating: number}) => sum + review.rating, 0) / totalReviews 
         : 0
       
       return {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
         rating: averageRating,
         reviewCount: totalReviews,
         bstStaked: 1000, // Will implement BST staking tracking
-        totalEarnings: property.bookings?.reduce((sum: number, booking: any) => sum + (booking.totalPrice || 0), 0) || 0,
+        totalEarnings: property.bookings?.reduce((sum: number, booking: {totalPrice?: number}) => sum + (booking.totalPrice || 0), 0) || 0,
         createdAt: property.createdAt.toISOString()
       }
     })

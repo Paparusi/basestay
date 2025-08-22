@@ -37,7 +37,7 @@ const AMENITIES = [
 ]
 
 interface PropertyFormProps {
-  onSubmit?: (result: any) => void
+  onSubmit?: (result: {success: boolean; error?: string}) => void
   onCancel?: () => void
 }
 
