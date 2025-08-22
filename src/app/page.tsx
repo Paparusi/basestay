@@ -107,6 +107,9 @@ export default function HomePage() {
               <Link href="/properties" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                 Explore
               </Link>
+              <Link href="/staking" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Staking
+              </Link>
               <Link href="/host" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                 Become a Host
               </Link>
@@ -139,6 +142,13 @@ export default function HomePage() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Explore
+                </Link>
+                <Link 
+                  href="/staking" 
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Staking
                 </Link>
                 <Link 
                   href="/host" 

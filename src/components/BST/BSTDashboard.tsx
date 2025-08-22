@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useBSTToken } from '@/hooks/useBSTToken'
 import { useAccount } from 'wagmi'
 
@@ -70,6 +71,12 @@ export default function BSTDashboard() {
                 : `Stake minimum ${minHostStake} BST to become a qualified host`
               }
             </p>
+            <Link 
+              href="/staking" 
+              className="inline-flex items-center mt-2 text-sm font-medium text-blue-600 hover:text-blue-500"
+            >
+              Go to Staking Page →
+            </Link>
           </div>
           {isQualifiedHost && (
             <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
