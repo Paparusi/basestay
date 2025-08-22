@@ -26,8 +26,7 @@ export const WalletSelector = () => {
 
   const walletIcons: { [key: string]: string } = {
     'Coinbase Wallet': '🔷',
-    'MetaMask': '🦊', 
-    'WalletConnect': '🌐'
+    'MetaMask': '🦊'
   }
 
   return (

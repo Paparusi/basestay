@@ -5,7 +5,7 @@ import { WagmiProvider, createConfig, http } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { OnchainKitProvider } from '@coinbase/onchainkit'
 import { base } from 'wagmi/chains'
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, metaMask } from 'wagmi/connectors'
 
 // Create wagmi config with proper connectors
 const config = createConfig({
@@ -19,15 +19,6 @@ const config = createConfig({
       dappMetadata: {
         name: 'BaseStay',
         url: 'https://basestay.io'
-      }
-    }),
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'default-project-id',
-      metadata: {
-        name: 'BaseStay',
-        description: 'Decentralized Booking Platform on Base',
-        url: 'https://basestay.io',
-        icons: ['https://basestay.io/logo.png']
       }
     })
   ],
