@@ -108,14 +108,22 @@ export default function AddPropertyPage() {
 
     try {
       const dataToSend = {
-        ...formData,
-        ownerAddress: address,
-        images: formData.images.length > 0 ? formData.images : ['placeholder.jpg'] // Add placeholder image
+        title: formData.title,
+        description: formData.description,
+        location: formData.location,
+        pricePerNight: formData.pricePerNight,
+        maxGuests: formData.maxGuests,
+        bedrooms: formData.bedrooms,
+        bathrooms: formData.bathrooms,
+        propertyType: formData.propertyType,
+        amenities: formData.amenities,
+        images: formData.images.length > 0 ? formData.images : [],
+        owner: address
       }
       
       console.log('Sending property data:', dataToSend)
       
-      const response = await fetch('/api/properties', {
+      const response = await fetch('/api/properties/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
