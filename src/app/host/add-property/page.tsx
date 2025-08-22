@@ -134,7 +134,7 @@ export default function AddPropertyPage() {
         owner: !!address
       })
       
-      const response = await fetch('/api/properties/test', {
+      const response = await fetch('/api/properties/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -146,14 +146,11 @@ export default function AddPropertyPage() {
       console.log('🔍 API Response:', data)
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to test property creation')
+        throw new Error(data.error || 'Failed to create property')
       }
 
-      // Show success with received data
-      alert(`✅ Test Success!\nReceived ${data.dataCount} fields:\n${data.dataKeys.join(', ')}`)
-      
       // Success - redirect to host dashboard
-      router.push('/host?success=property-tested')
+      router.push('/host?success=property-created')
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
