@@ -19,10 +19,17 @@ export async function POST(request: NextRequest) {
       owner: owner || 'MISSING'
     })
     
-    if (!title || !description || !location || !pricePerNight || !maxGuests || !owner) {
+    // Check for empty strings and null/undefined
+    const isEmpty = (value: any) => !value || (typeof value === 'string' && value.trim() === '')
+    
+    if (isEmpty(title) || isEmpty(description) || isEmpty(location) || 
+        isEmpty(pricePerNight) || isEmpty(maxGuests) || isEmpty(owner)) {
       console.log('❌ Validation failed - missing required fields')
       return NextResponse.json(
-        { error: 'Missing required fields: title, description, location, pricePerNight, maxGuests, owner' },
+        { 
+          error: 'Missing required fields: title, description, location, pricePerNight, maxGuests, owner',
+          received: { title, description, location, pricePerNight, maxGuests, owner }
+        },
         { status: 400 }
       )
     }

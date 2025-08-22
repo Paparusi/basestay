@@ -83,7 +83,9 @@ export default function AddPropertyPage() {
   const [currentStep, setCurrentStep] = useState(1)
 
   const handleInputChange = (field: keyof PropertyFormData, value: string | number | boolean | string[]) => {
+    console.log(`📝 Input changed: ${field} = ${value}`)
     setFormData(prev => ({ ...prev, [field]: value }))
+    console.log(`📝 Updated formData.${field}:`, value)
   }
 
   const handleAmenityToggle = (amenity: string) => {
