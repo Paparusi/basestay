@@ -1,5 +1,14 @@
-// Script to unpause BST token if needed
-const ethers = require('ethers');
+// Script to check BST token status
+import { ethers } from 'ethers';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables from scripts/.env
+dotenv.config({ path: join(__dirname, '.env') });
 
 const BST_ADDRESS = '0x8fDc3a7c612bc637B5659526B29Ee233e291F371';
 
@@ -29,7 +38,7 @@ const BST_ABI = [
 
 async function checkAndUnpauseBST() {
     // Connect to Base mainnet
-    const provider = new ethers.JsonRpcProvider('https://mainnet.base.org');
+    const provider = new ethers.providers.JsonRpcProvider('https://mainnet.base.org');
     
     // You need to add your private key here (the owner of the BST contract)
     const privateKey = process.env.PRIVATE_KEY;

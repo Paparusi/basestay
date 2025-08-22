@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useWriteContract, useReadContract } from 'wagmi'
-import { parseEther, formatEther } from 'viem'
+import { useAccount, useWriteContract } from 'wagmi'
+import { parseEther } from 'viem'
 
 const PROPERTY_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_PROPERTY_REGISTRY_ADDRESS as `0x${string}`
 
@@ -10,19 +10,11 @@ const PROPERTY_REGISTRY_ABI = [
   {
     inputs: [
       { name: 'metadataURI', type: 'string' },
-      { name: 'pricePerNight', type: 'uint256' },
-      { name: 'bstStakeAmount', type: 'uint256' }
+      { name: 'pricePerNight', type: 'uint256' }
     ],
     name: 'listProperty',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'MIN_BST_STAKE',
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
     type: 'function'
   }
 ] as const
@@ -35,18 +27,8 @@ export default function PropertyListing() {
     title: '',
     description: '',
     location: '',
-    pricePerNight: '',
-    bstStakeAmount: '1000'
+    pricePerNight: ''
   })
-
-  // Read minimum BST stake from contract
-  const { data: minBSTStake } = useReadContract({
-    address: PROPERTY_REGISTRY_ADDRESS,
-    abi: PROPERTY_REGISTRY_ABI,
-    functionName: 'MIN_BST_STAKE'
-  })
-
-  const minStakeFormatted = minBSTStake ? formatEther(minBSTStake) : '1000'
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target as HTMLInputElement | HTMLTextAreaElement
@@ -58,13 +40,6 @@ export default function PropertyListing() {
     
     if (!address) {
       window.alert('Please connect your wallet')
-      return
-    }
-
-    const stakeAmount = parseFloat(formData.bstStakeAmount)
-
-    if (stakeAmount < parseFloat(minStakeFormatted)) {
-      window.alert(`Minimum BST stake is ${minStakeFormatted} BST`)
       return
     }
 
@@ -87,8 +62,7 @@ export default function PropertyListing() {
         functionName: 'listProperty',
         args: [
           metadataURI,
-          parseEther(formData.pricePerNight),
-          parseEther(formData.bstStakeAmount)
+          parseEther(formData.pricePerNight)
         ]
       })
 
@@ -96,8 +70,7 @@ export default function PropertyListing() {
         title: '',
         description: '',
         location: '',
-        pricePerNight: '',
-        bstStakeAmount: '1000'
+        pricePerNight: ''
       })
     } catch (error) {
       console.error('Error listing property:', error)
@@ -123,7 +96,7 @@ export default function PropertyListing() {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">List Your Property</h2>
         <p className="text-gray-600">
-          Stake minimum {minStakeFormatted} BST to list your property on BaseStay
+          List your property on BaseStay and earn USDC from bookings
         </p>
       </div>
 
@@ -194,30 +167,12 @@ export default function PropertyListing() {
           />
         </div>
 
-        <div>
-          <label htmlFor="bstStakeAmount" className="block text-sm font-medium text-gray-700 mb-2">
-            BST Stake Amount *
-          </label>
-          <input
-            type="number"
-            id="bstStakeAmount"
-            name="bstStakeAmount"
-            value={formData.bstStakeAmount}
-            onChange={handleInputChange}
-            required
-            min={minStakeFormatted}
-            step="100"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder={`Minimum ${minStakeFormatted} BST`}
-          />
-        </div>
-
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-medium text-blue-800 mb-2">BST Staking Benefits:</h4>
-          <ul className="text-sm text-blue-700 space-y-1">
-            <li>• Higher stake = better property visibility</li>
-            <li>• Minimum {minStakeFormatted} BST required</li>
-            <li>• Stake returned when property deactivated</li>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h4 className="font-medium text-green-800 mb-2">Platform Benefits:</h4>
+          <ul className="text-sm text-green-700 space-y-1">
+            <li>• Instant USDC payments for bookings</li>
+            <li>• Low platform fee (5%)</li>
+            <li>• Decentralized & secure on Base blockchain</li>
           </ul>
         </div>
 

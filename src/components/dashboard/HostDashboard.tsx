@@ -12,9 +12,7 @@ import {
   UsersIcon,
   ChartBarIcon
 } from '@heroicons/react/24/outline'
-import { Coins } from 'lucide-react'
 import Link from 'next/link'
-import { useBSTToken } from '@/hooks/useBSTToken'
 
 interface Property {
   id: string
@@ -27,7 +25,6 @@ interface Property {
   bookings: number
   rating: number
   reviewCount: number
-  bstStaked: number
   totalEarnings: number
   createdAt: string
 }
@@ -55,15 +52,12 @@ interface DashboardStats {
   totalProperties: number
   activeBookings: number
   totalEarnings: number
-  totalBSTStaked: number
-  totalBSTEarned: number
   averageRating: number
   totalViews: number
 }
 
 export default function HostDashboard() {
   const { address, isConnected } = useAccount()
-  const { balance, stakedBalance, canListProperties } = useBSTToken()
   
   const [activeTab, setActiveTab] = useState('overview')
   const [properties, setProperties] = useState<Property[]>([])
@@ -72,8 +66,6 @@ export default function HostDashboard() {
     totalProperties: 0,
     activeBookings: 0,
     totalEarnings: 0,
-    totalBSTStaked: 0,
-    totalBSTEarned: 0,
     averageRating: 0,
     totalViews: 0
   })
@@ -171,10 +163,6 @@ export default function HostDashboard() {
               <h1 className="text-2xl font-bold text-gray-900">Host Dashboard</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full">
-                <Coins className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-900">{balance} BST</span>
-              </div>
               <Link
                 href="/host/properties/new"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
@@ -186,22 +174,6 @@ export default function HostDashboard() {
           </div>
         </div>
       </div>
-
-      {/* BST Staking Alert */}
-      {!canListProperties && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex">
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  <strong>Stake BST to List Properties:</strong> You need to stake at least 1,000 BST to list properties and earn rewards.
-                  Current balance: {balance} BST
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tabs */}
@@ -311,15 +283,15 @@ export default function HostDashboard() {
                 <div className="p-5">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Coins className="h-6 w-6 text-gray-400" />
+                      <StarIcon className="h-6 w-6 text-gray-400" />
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">
-                          BST Staked
+                          Average Rating
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          {stats.totalBSTStaked.toLocaleString()}
+                          {stats.averageRating.toFixed(1)}/5.0
                         </dd>
                       </dl>
                     </div>
@@ -463,8 +435,8 @@ export default function HostDashboard() {
                         <span className="text-lg font-bold text-gray-900">
                           ${property.pricePerNight}/night
                         </span>
-                        <span className="text-sm text-blue-600 font-medium">
-                          {property.bstStaked.toLocaleString()} BST staked
+                        <span className="text-sm text-green-600 font-medium">
+                          ${property.totalEarnings.toLocaleString()} earned
                         </span>
                       </div>
 
@@ -596,15 +568,15 @@ export default function HostDashboard() {
                 <div className="p-5">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Coins className="h-6 w-6 text-blue-400" />
+                      <EyeIcon className="h-6 w-6 text-purple-400" />
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">
-                          BST Rewards Earned
+                          Total Views
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          {stats.totalBSTEarned.toLocaleString()}
+                          {stats.totalViews.toLocaleString()}
                         </dd>
                       </dl>
                     </div>
