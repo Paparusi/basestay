@@ -1,0 +1,23 @@
+# Hardhat files
+hardhat.config.*
+ignition/
+test/
+cache/
+artifacts/
+
+# Contract scripts
+scripts/deploy-*.cjs
+scripts/deploy-*.ts
+scripts/verify-*.cjs
+
+# Build artifacts
+*.log
+.coverage
+coverage/
+
+# Environment
+.env
+.env.local
+
+# Development
+*.bak

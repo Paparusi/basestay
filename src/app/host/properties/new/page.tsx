@@ -105,25 +105,43 @@ export default function AddProperty() {
   }
 
   const handleSubmit = async () => {
+    if (!isConnected) {
+      alert('Please connect your wallet to list properties')
+      return
+    }
+
     setIsSubmitting(true)
     try {
-      // TODO: Implement actual property registration
-      // 1. Upload images to IPFS
-      // 2. Create metadata JSON
-      // 3. Call PropertyRegistry smart contract
-      // 4. Store additional data in database
+      // Use the property listing hook with BST staking
+      const { usePropertyListing } = await import('@/hooks/usePropertyListing')
+      const { listProperty } = usePropertyListing()
       
-      console.log('Submitting property:', formData)
+      // Convert form data to required format
+      const propertyData = {
+        name: formData.name,
+        description: formData.description,
+        location: formData.location,
+        pricePerNight: formData.pricePerNight,
+        maxGuests: formData.maxGuests,
+        bedrooms: formData.bedrooms,
+        bathrooms: formData.bathrooms,
+        propertyType: 'Apartment', // Default for now
+        amenities: formData.amenities,
+        images: formData.images.map(file => URL.createObjectURL(file)), // Convert files to URLs
+        checkInTime: '15:00',
+        checkOutTime: '11:00',
+        bstStakeAmount: 1000 // Default minimum stake
+      }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const result = await listProperty(propertyData)
       
-      // Redirect to host dashboard
-      router.push('/host?tab=properties&success=property-added')
+      if (result.success) {
+        router.push('/host?tab=properties&success=property-added')
+      }
       
     } catch (error) {
       console.error('Error creating property:', error)
-      alert('Failed to create property. Please try again.')
+      alert(error.message || 'Failed to create property. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
