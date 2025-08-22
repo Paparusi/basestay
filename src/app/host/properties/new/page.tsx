@@ -122,6 +122,7 @@ export default function AddPropertyOptimized() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState<string>('')
   
   const [formData, setFormData] = useState<PropertyForm>({
     name: '',
@@ -183,20 +184,47 @@ export default function AddPropertyOptimized() {
       setIsSubmitting(true)
       setSubmitStatus('idle')
 
-      // Simulate optimized API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Mock successful submission
-      console.log('Property submitted:', formData)
-      
+      // Prepare property data
+      const propertyData = {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        location: formData.location.trim(),
+        pricePerNight: formData.pricePerNight,
+        maxGuests: formData.maxGuests,
+        bedrooms: formData.bedrooms,
+        bathrooms: formData.bathrooms,
+        amenities: formData.amenities,
+        images: formData.images.map((file, index) => `property-${Date.now()}-${index}.jpg`), // Convert File objects to strings for now
+        owner: address
+      }
+
+      // Call API endpoint
+      const response = await fetch('/api/properties/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(propertyData)
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to create property')
+      }
+
+      console.log('✅ Property created successfully:', result.property)
       setSubmitStatus('success')
       
       // Redirect after brief success display
       setTimeout(() => {
         router.push('/host')
       }, 2000)
+      
     } catch (error) {
-      console.error('Error submitting property:', error)
+      console.error('❌ Error submitting property:', error)
+      const message = error instanceof Error ? error.message : 'Failed to create property. Please try again.'
+      setErrorMessage(message)
       setSubmitStatus('error')
       setIsSubmitting(false)
     }
@@ -441,7 +469,7 @@ export default function AddPropertyOptimized() {
         {submitStatus === 'error' && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-600 text-sm">
-              Failed to submit property. Please try again.
+              {errorMessage || 'Failed to submit property. Please try again.'}
             </p>
           </div>
         )}
