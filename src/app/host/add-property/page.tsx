@@ -134,7 +134,7 @@ export default function AddPropertyPage() {
         owner: !!address
       })
       
-      const response = await fetch('/api/properties/create', {
+      const response = await fetch('/api/simple-test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
