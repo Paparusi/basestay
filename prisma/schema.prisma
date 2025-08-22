@@ -1,6 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+// Clean Prisma schema for BaseStay - Real Production Database
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,32 +8,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String   @id @default(cuid())
-  walletAddress String   @unique
-  email         String?
-  username      String?
-  displayName   String?
-  bio           String?
-  avatar        String?
-  isHost        Boolean  @default(false)
-  isVerified    Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
-  // Relations
-  properties    Property[]
-  bookings      Booking[]
-  reviews       Review[] @relation("UserReviews")
-  reviewsGiven  Review[] @relation("ReviewsGiven")
-  messages      Message[]
-  
-  @@map("users")
-}
-
 model Property {
   id              String   @id @default(cuid())
-  tokenId         Int      @unique // NFT token ID from blockchain
   title           String
   description     String
   location        String
@@ -45,110 +19,85 @@ model Property {
   maxGuests       Int
   bedrooms        Int
   bathrooms       Int
-  propertyType    String
-  amenities       Json
-  images          Json     // Array of IPFS hashes
-  rules           String?
-  checkInTime     String?
-  checkOutTime    String?
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  propertyType    String   @default("apartment")
+  amenities       Json     @default("[]")
+  images          Json     @default("[]")
+  status          String   @default("active") // active, inactive, pending
+  owner           String   // Wallet address
   
-  // Owner info (from blockchain)
-  ownerAddress    String
-  owner           User     @relation(fields: [ownerAddress], references: [walletAddress])
+  // Metrics - calculated fields
+  totalBookings   Int      @default(0)
+  totalEarnings   Float    @default(0)
+  averageRating   Float    @default(0)
+  reviewCount     Int      @default(0)
+  totalViews      Int      @default(0)
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
   // Relations
   bookings        Booking[]
   reviews         Review[]
+  earnings        Earnings[]
   
   @@map("properties")
 }
 
 model Booking {
-  id              String        @id @default(cuid())
-  blockchainId    Int?         // Booking ID from smart contract
-  propertyId      String
-  guestAddress    String
-  hostAddress     String
-  checkInDate     DateTime
-  checkOutDate    DateTime
-  totalPrice      Float
-  platformFee     Float
-  status          BookingStatus @default(PENDING)
-  guestMessage    String?
-  transactionHash String?      // Blockchain transaction hash
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id              String   @id @default(cuid())
+  propertyId      String   @map("property_id")
+  guestAddress    String   @map("guest_address")
+  guestName       String?  @map("guest_name")
+  checkIn         DateTime @map("check_in")
+  checkOut        DateTime @map("check_out")
+  totalPrice      Float    @map("total_price")
+  guests          Int
+  status          String   @default("pending") // pending, confirmed, active, completed, cancelled
+  notes           String?
+  transactionHash String?  @map("transaction_hash") // USDC payment hash
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
   // Relations
-  property        Property     @relation(fields: [propertyId], references: [id])
-  guest           User         @relation(fields: [guestAddress], references: [walletAddress])
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   reviews         Review[]
-  messages        Message[]
+  earnings        Earnings[]
   
   @@map("bookings")
 }
 
 model Review {
   id              String   @id @default(cuid())
-  blockchainId    Int?     // Review ID from smart contract
-  bookingId       String
-  reviewerAddress String
-  revieweeAddress String
-  propertyId      String?
+  bookingId       String   @map("booking_id")
+  propertyId      String   @map("property_id")
+  reviewerAddress String   @map("reviewer_address")
+  reviewerName    String?  @map("reviewer_name")
   rating          Int      // 1-5 stars
-  comment         String
-  isGuestReview   Boolean  // true if guest reviewing host
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  comment         String?
+  createdAt       DateTime @default(now()) @map("created_at")
   
   // Relations
-  booking         Booking  @relation(fields: [bookingId], references: [id])
-  reviewer        User     @relation("ReviewsGiven", fields: [reviewerAddress], references: [walletAddress])
-  reviewee        User     @relation("UserReviews", fields: [revieweeAddress], references: [walletAddress])
-  property        Property? @relation(fields: [propertyId], references: [id])
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   
   @@map("reviews")
 }
 
-model Message {
+model Earnings {
   id              String   @id @default(cuid())
-  bookingId       String
-  senderAddress   String
-  content         String
-  isFromHost      Boolean
-  readAt          DateTime?
-  createdAt       DateTime @default(now())
+  hostAddress     String   @map("host_address")
+  bookingId       String   @map("booking_id")
+  propertyId      String   @map("property_id") 
+  amount          Float    // Total booking amount
+  platformFee     Float    @map("platform_fee") // 5% fee (amount * 0.05)
+  netAmount       Float    @map("net_amount")   // Amount after fee (amount * 0.95)
+  status          String   @default("pending") // pending, completed, paid
+  transactionHash String?  @map("transaction_hash") // USDC transfer hash
+  createdAt       DateTime @default(now()) @map("created_at")
   
   // Relations
-  booking         Booking  @relation(fields: [bookingId], references: [id])
-  sender          User     @relation(fields: [senderAddress], references: [walletAddress])
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   
-  @@map("messages")
+  @@map("earnings")
 }
-
-model SearchIndex {
-  id          String   @id @default(cuid())
-  propertyId  String   @unique
-  searchText  String   // Full-text search content
-  location    String
-  priceRange  String
-  amenities   Json
-  updatedAt   DateTime @updatedAt
-  
-  @@map("search_index")
-}
-
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CHECKED_IN
-  CHECKED_OUT
-  CANCELLED
-  DISPUTED
-}
-
-// Add indexes for better query performance
-// These will be added via raw SQL or Prisma migrations

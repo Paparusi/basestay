@@ -72,9 +72,24 @@ export default function HostAnalytics() {
 
   const loadAnalytics = async () => {
     try {
-      // TODO: Load real analytics from smart contracts and database
-      // Mock data for now
-      const mockAnalytics: Analytics = {
+      // Fetch real analytics from API
+      const response = await fetch(`/api/analytics?owner=${address}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        setAnalytics(data)
+      } else {
+        // Set empty analytics if API fails
+        setAnalytics({
+          revenue: { total: 0, thisMonth: 0, lastMonth: 0, change: 0 },
+          bookings: { total: 0, thisMonth: 0, lastMonth: 0, change: 0 },
+          occupancyRate: { current: 0, change: 0 },
+          averageRating: { current: 0, change: 0 },
+          monthlyData: [],
+          topProperties: [],
+          recentActivities: []
+        })
+      }
         revenue: {
           total: 24500,
           thisMonth: 3200,

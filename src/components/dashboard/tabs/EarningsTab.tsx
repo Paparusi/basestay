@@ -184,7 +184,7 @@ export default function EarningsTab() {
         setLoading(true)
         setError(null)
 
-        const response = await fetch(`/api/host/earnings?owner=${address}`)
+        const response = await fetch(`/api/earnings?owner=${address}`)
         
         if (!response.ok) {
           throw new Error('Failed to load earnings data')
@@ -196,65 +196,17 @@ export default function EarningsTab() {
         console.error('Error loading earnings:', error)
         setError('Failed to load earnings data')
         
-        // Mock data for development
+        // Set empty earnings data
         setEarningsData({
-          totalEarnings: 4280,
-          thisMonthEarnings: 950,
-          lastMonthEarnings: 820,
-          pendingPayouts: 180,
-          completedBookings: 23,
-          averageNightlyRate: 135,
-          occupancyRate: 78,
-          monthlyData: [
-            { month: 'Jan', earnings: 680, bookings: 5 },
-            { month: 'Feb', earnings: 820, bookings: 6 },
-            { month: 'Mar', earnings: 950, bookings: 7 },
-            { month: 'Apr', earnings: 1200, bookings: 9 },
-            { month: 'May', earnings: 1430, bookings: 11 },
-            { month: 'Jun', earnings: 1680, bookings: 12 }
-          ],
-          recentTransactions: [
-            {
-              id: '1',
-              propertyTitle: 'Modern Downtown Apartment',
-              amount: 360,
-              date: '2024-03-18',
-              type: 'earning',
-              status: 'completed'
-            },
-            {
-              id: '2',
-              propertyTitle: 'Cozy Beach House',
-              amount: 200,
-              date: '2024-03-17',
-              type: 'payout',
-              status: 'pending'
-            },
-            {
-              id: '3',
-              propertyTitle: 'Mountain Cabin Retreat',
-              amount: 18,
-              date: '2024-03-16',
-              type: 'fee',
-              status: 'completed'
-            },
-            {
-              id: '4',
-              propertyTitle: 'Modern Downtown Apartment',
-              amount: 240,
-              date: '2024-03-15',
-              type: 'earning',
-              status: 'completed'
-            },
-            {
-              id: '5',
-              propertyTitle: 'Cozy Beach House',
-              amount: 600,
-              date: '2024-03-14',
-              type: 'earning',
-              status: 'completed'
-            }
-          ]
+          totalEarnings: 0,
+          thisMonthEarnings: 0,
+          lastMonthEarnings: 0,
+          pendingPayouts: 0,
+          completedBookings: 0,
+          averageNightlyRate: 0,
+          occupancyRate: 0,
+          monthlyData: [],
+          recentTransactions: []
         })
       } finally {
         setLoading(false)
