@@ -5,39 +5,34 @@ const prisma = new PrismaClient()
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json()
-    console.log('🔍 Received data in API:', JSON.stringify(data, null, 2))
+    console.log('🚀 Property creation API called')
     
-    // Extract fields with defaults - NO VALIDATION, JUST DEFAULTS
-    const {
-      title = 'Untitled Property',
-      description = 'No description provided',
-      location = 'Location not specified', 
-      pricePerNight = 50,
-      maxGuests = 1,
-      bedrooms = 1,
-      bathrooms = 1,
-      owner = 'unknown'
-    } = data
+    const data = await request.json()
+    console.log('🔍 Received data:', data)
+    
+    // Minimal property data
+    const propertyData = {
+      title: 'Test Property',
+      description: 'Test description',
+      location: 'Test location',
+      pricePerNight: 100,
+      maxGuests: 2,
+      bedrooms: 1,
+      bathrooms: 1,
+      propertyType: 'apartment',
+      amenities: [],
+      images: [],
+      owner: 'test-owner'
+    }
+    
+    console.log('🔧 Creating property with data:', propertyData)
 
-    // Create property in Railway PostgreSQL database
+    // Try to create property
     const property = await prisma.property.create({
-      data: {
-        title: String(title).trim() || 'Untitled Property',
-        description: String(description).trim() || 'No description provided',
-        location: String(location).trim() || 'Location not specified',
-        pricePerNight: Number(pricePerNight) || 50,
-        maxGuests: Number(maxGuests) || 1,
-        bedrooms: Number(bedrooms) || 1,
-        bathrooms: Number(bathrooms) || 1,
-        propertyType: data.propertyType || 'apartment',
-        amenities: Array.isArray(data.amenities) ? data.amenities : [],
-        images: Array.isArray(data.images) ? data.images : [],
-        owner: String(owner).toLowerCase() || 'unknown'
-      }
+      data: propertyData
     })
 
-    console.log('✅ Property created in database:', property.id)
+    console.log('✅ Property created:', property)
     
     return NextResponse.json({
       success: true,
