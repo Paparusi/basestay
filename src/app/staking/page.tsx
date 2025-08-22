@@ -9,8 +9,24 @@ import { CONTRACT_ADDRESSES, BST_CONFIG } from '@/lib/contracts'
 // BST Token contract address
 const BST_CONTRACT_ADDRESS = CONTRACT_ADDRESSES.BST_TOKEN
 
-// BST Token ABI (simplified for staking functions)
+// BST Token ABI (enhanced with ERC20 functions)
 const BST_ABI = [
+  // ERC20 Basic Functions
+  {
+    inputs: [{ name: 'owner', type: 'address' }, { name: 'spender', type: 'address' }],
+    name: 'allowance',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ name: 'spender', type: 'address' }, { name: 'amount', type: 'uint256' }],
+    name: 'approve',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  // Staking Functions
   {
     inputs: [{ name: 'amount', type: 'uint256' }],
     name: 'stakeForHost',
@@ -91,6 +107,14 @@ export default function StakingPage() {
     query: { enabled: !!address }
   })
 
+  const { data: allowance } = useReadContract({
+    address: BST_CONTRACT_ADDRESS,
+    abi: BST_ABI,
+    functionName: 'allowance',
+    args: address ? [address, BST_CONTRACT_ADDRESS] : undefined,
+    query: { enabled: !!address }
+  })
+
   const { data: pendingRewards } = useReadContract({
     address: BST_CONTRACT_ADDRESS,
     abi: BST_ABI,
@@ -114,14 +138,37 @@ export default function StakingPage() {
   })
 
   // Write contract functions
+  const { writeContract: approve, data: approveHash } = useWriteContract()
   const { writeContract: stake, data: stakeHash } = useWriteContract()
   const { writeContract: unstake, data: unstakeHash } = useWriteContract()
   const { writeContract: claimRewards, data: claimHash } = useWriteContract()
 
   // Transaction receipts
+  const { isLoading: isApproving } = useWaitForTransactionReceipt({ hash: approveHash })
   const { isLoading: isStaking } = useWaitForTransactionReceipt({ hash: stakeHash })
   const { isLoading: isUnstaking } = useWaitForTransactionReceipt({ hash: unstakeHash })
   const { isLoading: isClaiming } = useWaitForTransactionReceipt({ hash: claimHash })
+
+  // Check if approval is needed
+  const needsApproval = (amount: string) => {
+    if (!allowance || !amount) return false
+    return parseEther(amount) > allowance
+  }
+
+  const handleApprove = async () => {
+    if (!stakeAmount || !address) return
+    
+    try {
+      await approve({
+        address: BST_CONTRACT_ADDRESS,
+        abi: BST_ABI,
+        functionName: 'approve',
+        args: [BST_CONTRACT_ADDRESS, parseEther(stakeAmount)]
+      })
+    } catch (error) {
+      console.error('Approval error:', error)
+    }
+  }
 
   const handleStake = () => {
     if (!stakeAmount || !address) return
@@ -300,13 +347,32 @@ export default function StakingPage() {
                 </p>
               </div>
 
-              <button
-                onClick={handleStake}
-                disabled={isStaking || !stakeAmount || Number(stakeAmount) <= 0}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isStaking ? 'Staking...' : 'Stake BST'}
-              </button>
+              {/* Approve/Stake Buttons */}
+              <div className="space-y-3">
+                {needsApproval(stakeAmount) ? (
+                  <button
+                    onClick={handleApprove}
+                    disabled={isApproving || !stakeAmount || Number(stakeAmount) <= 0}
+                    className="w-full bg-yellow-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isApproving ? 'Approving...' : `Approve ${stakeAmount} BST`}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleStake}
+                    disabled={isStaking || !stakeAmount || Number(stakeAmount) <= 0 || needsApproval(stakeAmount)}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isStaking ? 'Staking...' : 'Stake BST'}
+                  </button>
+                )}
+
+                {stakeAmount && (
+                  <div className="text-xs text-gray-500 text-center">
+                    Current allowance: {allowance ? formatEther(allowance) : '0'} BST
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -362,6 +428,33 @@ export default function StakingPage() {
         {/* How It Works */}
         <div className="mt-12 bg-white rounded-xl p-8 shadow-sm border border-gray-200">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">How BST Staking Works</h2>
+          
+          {/* BST Token Info */}
+          <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">BST Token Contract</h3>
+            <div className="flex items-center space-x-3">
+              <code className="text-sm bg-gray-200 px-3 py-1 rounded font-mono">
+                {BST_CONTRACT_ADDRESS}
+              </code>
+              <button
+                onClick={() => navigator.clipboard.writeText(BST_CONTRACT_ADDRESS)}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                Copy
+              </button>
+              <a
+                href={`https://basescan.org/address/${BST_CONTRACT_ADDRESS}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                View on BaseScan →
+              </a>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Add BST token to your wallet using this contract address. Symbol: BST, Decimals: 18
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">

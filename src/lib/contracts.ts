@@ -1,14 +1,14 @@
 // BaseStay Smart Contract Addresses on Base Mainnet
-// Note: These are placeholder addresses - replace with actual deployed contract addresses
+// Deployed and verified contracts
 
 export const CONTRACT_ADDRESSES = {
-  // BST Token Contract
-  BST_TOKEN: '0x1234567890123456789012345678901234567890' as `0x${string}`,
+  // BST Token Contract (Deployed on Base Mainnet)
+  BST_TOKEN: '0x8fDc3a7c612bc637B5659526B29Ee233e291F371' as `0x${string}`,
   
-  // Core Platform Contracts  
-  PROPERTY_REGISTRY: '0x2345678901234567890123456789012345678901' as `0x${string}`,
-  BOOKING_MANAGER: '0x3456789012345678901234567890123456789012' as `0x${string}`,
-  REVIEW_SYSTEM: '0x4567890123456789012345678901234567890123' as `0x${string}`,
+  // Core Platform Contracts (Deployed on Base Mainnet)
+  PROPERTY_REGISTRY: '0x1CBE968d60aeaabfe3E11C2c3C3fBAe74193d708' as `0x${string}`,
+  BOOKING_MANAGER: '0x07314d16678595162fC55e02Df28e36839a81b74' as `0x${string}`,
+  REVIEW_SYSTEM: '0x529B251FE5B4d38a9F31199F201F57b0002bA965' as `0x${string}`,
   
   // Staking & Rewards
   STAKING_REWARDS: '0x5678901234567890123456789012345678901234' as `0x${string}`,
