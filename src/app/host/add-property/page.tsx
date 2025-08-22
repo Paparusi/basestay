@@ -121,7 +121,16 @@ export default function AddPropertyPage() {
         owner: address
       }
       
-      console.log('Sending property data:', dataToSend)
+      console.log('🚀 Form data before sending:', formData)
+      console.log('🚀 Data being sent to API:', dataToSend)
+      console.log('🚀 Fields check:', {
+        title: !!formData.title,
+        description: !!formData.description,
+        location: !!formData.location,
+        pricePerNight: !!formData.pricePerNight,
+        maxGuests: !!formData.maxGuests,
+        owner: !!address
+      })
       
       const response = await fetch('/api/properties/create', {
         method: 'POST',

@@ -6,11 +6,21 @@ const prisma = new PrismaClient()
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
+    console.log('🔍 Received data in API:', JSON.stringify(data, null, 2))
     
     // Validate required fields
     const { title, description, location, pricePerNight, maxGuests, bedrooms, bathrooms, owner } = data
+    console.log('🔍 Extracted fields:', {
+      title: title || 'MISSING',
+      description: description || 'MISSING', 
+      location: location || 'MISSING',
+      pricePerNight: pricePerNight || 'MISSING',
+      maxGuests: maxGuests || 'MISSING',
+      owner: owner || 'MISSING'
+    })
     
     if (!title || !description || !location || !pricePerNight || !maxGuests || !owner) {
+      console.log('❌ Validation failed - missing required fields')
       return NextResponse.json(
         { error: 'Missing required fields: title, description, location, pricePerNight, maxGuests, owner' },
         { status: 400 }
