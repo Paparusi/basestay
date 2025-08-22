@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { ConnectWallet } from '@coinbase/onchainkit/wallet'
 import HostDashboard from '@/components/dashboard/HostDashboard'
 
 export default function HostPage() {
@@ -21,9 +22,9 @@ export default function HostPage() {
             <p className="text-gray-600 mb-6">
               Connect your Web3 wallet to access your host dashboard and manage your properties on the Base network.
             </p>
-            <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-              Connect Wallet
-            </button>
+            <div className="flex justify-center">
+              <ConnectWallet />
+            </div>
           </div>
         </div>
       </div>
