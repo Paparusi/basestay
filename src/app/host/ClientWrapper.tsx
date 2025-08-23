@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { usePathname } from 'next/navigation'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 // Simple loading component
 function HostLoading() {
@@ -20,9 +21,14 @@ export default function HostClientWrapper({ children }: { children: React.ReactN
   const pathname = usePathname()
 
   useEffect(() => {
-    // Ensure we're fully mounted on client
-    setIsClient(true)
-  }, [])
+    try {
+      // Ensure we're fully mounted on client
+      setIsClient(true)
+      console.log('✅ HostClientWrapper mounted, pathname:', pathname)
+    } catch (error) {
+      console.error('❌ Error in HostClientWrapper mount:', error)
+    }
+  }, [pathname])
 
   // Always show loading during SSR and initial hydration
   if (!isClient) {
@@ -31,8 +37,14 @@ export default function HostClientWrapper({ children }: { children: React.ReactN
 
   // Redirect /host to /host/dashboard on client side
   useEffect(() => {
-    if (pathname === '/host') {
-      window.location.replace('/host/dashboard')
+    try {
+      if (pathname === '/host') {
+        console.log('🔄 Redirecting /host to /host/dashboard')
+        window.location.replace('/host/dashboard')
+        return
+      }
+    } catch (error) {
+      console.error('❌ Error in redirect logic:', error)
     }
   }, [pathname])
 
@@ -41,8 +53,10 @@ export default function HostClientWrapper({ children }: { children: React.ReactN
   }
 
   return (
-    <Suspense fallback={<HostLoading />}>
-      {children}
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<HostLoading />}>
+        {children}
+      </Suspense>
+    </ErrorBoundary>
   )
 }
