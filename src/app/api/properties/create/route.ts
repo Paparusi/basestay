@@ -10,19 +10,30 @@ export async function POST(request: NextRequest) {
     const data = await request.json()
     console.log('🔍 Received data:', data)
     
-    // Minimal property data
+    // Validate required fields
+    const requiredFields = ['title', 'description', 'location', 'pricePerNight', 'maxGuests']
+    for (const field of requiredFields) {
+      if (!data[field]) {
+        return NextResponse.json(
+          { error: `Missing required field: ${field}` },
+          { status: 400 }
+        )
+      }
+    }
+    
+    // Use actual form data with defaults for optional fields
     const propertyData = {
-      title: 'Test Property',
-      description: 'Test description',
-      location: 'Test location',
-      pricePerNight: 100,
-      maxGuests: 2,
-      bedrooms: 1,
-      bathrooms: 1,
-      propertyType: 'apartment',
-      amenities: [],
-      images: [],
-      owner: 'test-owner'
+      title: data.title,
+      description: data.description,
+      location: data.location,
+      pricePerNight: Number(data.pricePerNight),
+      maxGuests: Number(data.maxGuests),
+      bedrooms: Number(data.bedrooms) || 1,
+      bathrooms: Number(data.bathrooms) || 1,
+      propertyType: data.propertyType || 'apartment',
+      amenities: data.amenities || [],
+      images: data.images || [],
+      owner: data.owner || 'anonymous'
     }
     
     console.log('🔧 Creating property with data:', propertyData)

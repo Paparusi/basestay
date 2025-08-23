@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
     const properties = await prisma.property.findMany({
       where: {
-        ownerAddress: ownerAddress.toLowerCase()
+        owner: ownerAddress.toLowerCase()
       },
       include: {
         bookings: {

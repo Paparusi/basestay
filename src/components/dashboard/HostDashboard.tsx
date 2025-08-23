@@ -83,7 +83,7 @@ export default function HostDashboard() {
       setLoading(true)
       
       // Load properties
-      const propertiesResponse = await fetch(`/api/host/properties?owner=${address}`)
+      const propertiesResponse = await fetch(`/api/properties?ownerAddress=${address}`)
       if (propertiesResponse.ok) {
         const propertiesData = await propertiesResponse.json()
         setProperties(propertiesData.properties || [])
