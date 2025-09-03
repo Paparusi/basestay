@@ -119,6 +119,28 @@ const FormInput = ({
 export default function AddPropertyOptimized() {
   const router = useRouter()
   const { address, isConnected } = useAccount()
+
+  // Early return for wallet connection check - BEFORE other hooks
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
+          <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-yellow-500 mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Connect Your Wallet</h2>
+          <p className="text-gray-600 mb-6">
+            Please connect your wallet to list a property on BaseStay
+          </p>
+          <ConnectWallet>
+            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+              Connect Wallet
+            </button>
+          </ConnectWallet>
+        </div>
+      </div>
+    )
+  }
+
+  // All other hooks AFTER the conditional return
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -241,19 +263,6 @@ export default function AddPropertyOptimized() {
       setCurrentStep(prev => prev - 1)
     }
   }, [currentStep])
-
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
-          <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-yellow-500 mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Connect Your Wallet</h2>
-          <p className="text-gray-600 mb-6">You need to connect your wallet to list a property.</p>
-          <ConnectWallet className="mx-auto" />
-        </div>
-      </div>
-    )
-  }
 
   if (submitStatus === 'success') {
     return (

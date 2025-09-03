@@ -26,31 +26,46 @@ export const WalletSelector = () => {
 
   const walletIcons: { [key: string]: string } = {
     'Coinbase Wallet': '🔷',
-    'MetaMask': '🦊'
+    'MetaMask': '🦊',
+    'coinbaseWallet': '🔷',
+    'metaMask': '🦊'
+  }
+
+  const walletDescriptions: { [key: string]: string } = {
+    'Coinbase Wallet': 'Connect with Coinbase Wallet',
+    'MetaMask': 'Connect with MetaMask browser extension',
+    'coinbaseWallet': 'Connect with Coinbase Wallet',
+    'metaMask': 'Connect with MetaMask browser extension'
   }
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm flex items-center space-x-2"
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm flex items-center space-x-2 border border-blue-600"
         disabled={isPending}
       >
+        <span className="text-lg">👛</span>
         <span className="hidden sm:inline">
           {isPending ? 'Connecting...' : 'Connect Wallet'}
         </span>
         <span className="sm:hidden">
           {isPending ? 'Connecting...' : 'Connect'}
         </span>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg 
+          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-48 z-50">
-          <div className="p-2">
-            <div className="text-xs text-gray-500 font-medium mb-2 px-2">Choose Wallet</div>
+        <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-56 z-50">
+          <div className="p-3">
+            <div className="text-xs text-gray-500 font-medium mb-3 px-1 uppercase tracking-wide">Choose Your Wallet</div>
             {connectors.map((connector) => (
               <button
                 key={connector.uid}
@@ -59,12 +74,17 @@ export const WalletSelector = () => {
                   setIsOpen(false)
                 }}
                 disabled={isPending}
-                className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                className="w-full flex items-center space-x-3 px-3 py-3 text-sm text-gray-700 hover:bg-blue-50 rounded-md transition-colors border border-transparent hover:border-blue-200"
               >
-                <span className="text-lg">
-                  {walletIcons[connector.name] || '💳'}
+                <span className="text-xl">
+                  {walletIcons[connector.name] || walletIcons[connector.id] || '💳'}
                 </span>
-                <span className="font-medium">{connector.name}</span>
+                <div className="flex-1 text-left">
+                  <div className="font-medium">{connector.name}</div>
+                  <div className="text-xs text-gray-500">
+                    {walletDescriptions[connector.name] || walletDescriptions[connector.id] || 'Connect wallet'}
+                  </div>
+                </div>
                 {isPending && (
                   <div className="ml-auto">
                     <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -72,16 +92,6 @@ export const WalletSelector = () => {
                 )}
               </button>
             ))}
-          </div>
-          
-          {/* OnchainKit Fallback */}
-          <div className="border-t border-gray-100 p-2">
-            <div className="text-xs text-gray-500 font-medium mb-2 px-2">Or use OnchainKit</div>
-            <ConnectWallet>
-              <button className="w-full px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-medium">
-                OnchainKit Connect
-              </button>
-            </ConnectWallet>
           </div>
         </div>
       )}

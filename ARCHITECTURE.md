@@ -28,7 +28,7 @@ Cons: ❌ Need server infrastructure, ❌ Centralized components
      │                         │                         │
      ├── Web3 Only             ├── Images               ├── ALL DATA
      ├── Metamask Required     ├── Metadata             ├── Expensive Queries
-     └── Slow Loading          ├── Search Index         ├── High Gas Fees
+     └── Slow Loading          ├── Search Index         ├── High Gas Fees   
                                └── User Profiles        └── Slow Performance
 
 Pros: ✅ 100% Decentralized, ✅ Censorship Resistant

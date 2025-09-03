@@ -14,6 +14,11 @@ import {
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
+// Safe number formatting utilities
+const safeNumber = (value: number | undefined | null): number => value || 0
+const safeToFixed = (value: number | undefined | null, digits: number = 2): string => 
+  safeNumber(value).toFixed(digits)
+
 interface Property {
   id: string
   title: string
@@ -100,7 +105,14 @@ export default function HostDashboard() {
       const statsResponse = await fetch(`/api/host/stats?owner=${address}`)
       if (statsResponse.ok) {
         const statsData = await statsResponse.json()
-        setStats(statsData)
+        // Map API response to component state
+        setStats({
+          totalProperties: statsData.stats?.totalProperties || 0,
+          activeBookings: statsData.stats?.activeBookings || 0,
+          totalEarnings: statsData.stats?.totalEarnings || statsData.stats?.totalRevenue || 0,
+          averageRating: statsData.stats?.averageRating || 0,
+          totalViews: statsData.stats?.totalViews || 0
+        })
       }
 
     } catch (error) {
@@ -271,7 +283,7 @@ export default function HostDashboard() {
                           Total Earnings
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          ${stats.totalEarnings.toFixed(2)}
+                          ${stats.totalEarnings}
                         </dd>
                       </dl>
                     </div>
@@ -556,7 +568,7 @@ export default function HostDashboard() {
                           Total USDC Earned
                         </dt>
                         <dd className="text-lg font-medium text-gray-900">
-                          ${stats.totalEarnings.toFixed(2)}
+                          ${stats.totalEarnings}
                         </dd>
                       </dl>
                     </div>
@@ -610,15 +622,15 @@ export default function HostDashboard() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-sm text-gray-600">Property Bookings</span>
-                  <span className="font-medium">${(stats.totalEarnings * 0.975).toFixed(2)}</span>
+                  <span className="font-medium">${(stats.totalEarnings * 0.975)}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-sm text-gray-600">Platform Fee (2.5%)</span>
-                  <span className="font-medium text-red-600">-${(stats.totalEarnings * 0.025).toFixed(2)}</span>
+                  <span className="font-medium text-red-600">-${(stats.totalEarnings * 0.025)}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 font-semibold">
                   <span>Net Earnings</span>
-                  <span className="text-green-600">${stats.totalEarnings.toFixed(2)}</span>
+                  <span className="text-green-600">${stats.totalEarnings}</span>
                 </div>
               </div>
             </div>

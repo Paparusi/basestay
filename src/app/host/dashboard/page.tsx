@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { ConnectWallet } from '@coinbase/onchainkit/wallet'
-import HostDashboard from '@/components/dashboard/HostDashboard'
+import HostDashboard from '@/components/dashboard/HostDashboardSafe'
 
 export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false)

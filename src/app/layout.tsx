@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "../styles/critical.css";
-import { Web3Provider } from '@/components/web3/Web3Provider'
+import { ConditionalWeb3Provider } from '@/components/web3/ConditionalWeb3Provider'
+import '@/utils/fetchInterceptor'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -61,9 +62,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-sans antialiased`}
       >
-        <Web3Provider>
+        <ConditionalWeb3Provider>
           {children}
-        </Web3Provider>
+        </ConditionalWeb3Provider>
       </body>
     </html>
   );

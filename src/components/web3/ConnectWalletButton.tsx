@@ -1,7 +1,7 @@
 'use client'
 
 import { useAccount, useDisconnect } from 'wagmi'
-import { ConnectWallet } from '@coinbase/onchainkit/wallet'
+import { WalletSelector } from './WalletSelector'
 
 export const ConnectWalletButton = () => {
   const { address, isConnected, connector } = useAccount()
@@ -36,12 +36,5 @@ export const ConnectWalletButton = () => {
     )
   }
 
-  return (
-    <ConnectWallet>
-      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm">
-        <span className="hidden sm:inline">Connect Wallet</span>
-        <span className="sm:hidden">Connect</span>
-      </button>
-    </ConnectWallet>
-  )
+  return <WalletSelector />
 }

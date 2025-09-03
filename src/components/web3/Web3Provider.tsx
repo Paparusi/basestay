@@ -11,21 +11,23 @@ import { coinbaseWallet, metaMask } from 'wagmi/connectors'
 const config = createConfig({
   chains: [base],
   connectors: [
-    coinbaseWallet({ 
-      appName: 'BaseStay',
-      appLogoUrl: 'https://basestay.io/logo.png'
-    }),
     metaMask({
       dappMetadata: {
-        name: 'BaseStay',
-        url: 'https://basestay.io'
+        name: 'BaseStay - Decentralized Booking Platform',
+        url: 'https://basestay.io',
+        iconUrl: 'https://basestay.io/logo.png'
       }
+    }),
+    coinbaseWallet({ 
+      appName: 'BaseStay - Decentralized Booking Platform',
+      appLogoUrl: 'https://basestay.io/logo.png',
+      preference: 'smartWalletOnly' // Use Smart Wallet for better UX
     })
   ],
   transports: {
     [base.id]: http('https://mainnet.base.org')
   },
-  ssr: true
+  ssr: false // Disable SSR to prevent hydration issues
 })
 
 const queryClient = new QueryClient({
