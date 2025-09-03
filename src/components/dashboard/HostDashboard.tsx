@@ -13,6 +13,8 @@ import {
   ChartBarIcon
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import Breadcrumb from '@/components/navigation/Breadcrumb'
+import { HostNavigationButtons } from '@/components/navigation/PageNavigationButtons'
 
 // Safe number formatting utilities
 const safeNumber = (value: number | undefined | null): number => value || 0
@@ -175,12 +177,14 @@ function HostDashboardContent() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Breadcrumb />
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <HomeIcon className="h-8 w-8 text-blue-600" />
               <h1 className="text-2xl font-bold text-gray-900">Host Dashboard</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <HostNavigationButtons className="hidden md:flex" />
               <Link
                 href="/host/properties/new"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"

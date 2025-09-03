@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "../styles/critical.css";
 import { ConditionalWeb3Provider } from '@/components/web3/ConditionalWeb3Provider'
+import Navbar from '@/components/layout/Navbar'
+import QuickNavigationPanel from '@/components/navigation/QuickNavigationPanel'
 import '@/utils/fetchInterceptor'
 
 const inter = Inter({
@@ -63,7 +65,9 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
       >
         <ConditionalWeb3Provider>
+          <Navbar />
           {children}
+          <QuickNavigationPanel />
         </ConditionalWeb3Provider>
       </body>
     </html>
