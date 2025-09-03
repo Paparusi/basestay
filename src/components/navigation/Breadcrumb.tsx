@@ -22,21 +22,21 @@ interface BreadcrumbProps {
 }
 
 const pathNameMap: Record<string, string> = {
-  '/': 'Trang chủ',
-  '/search': 'Tìm kiếm',
-  '/favorites': 'Yêu thích',
-  '/profile': 'Hồ sơ',
-  '/settings': 'Cài đặt',
-  '/host': 'Chủ nhà',
+  '/': 'Home',
+  '/search': 'Search',
+  '/favorites': 'Wishlist',
+  '/profile': 'Profile',
+  '/settings': 'Settings',
+  '/host': 'Host',
   '/host/dashboard': 'Dashboard',
-  '/host/properties': 'Quản lý chỗ ở',
-  '/host/properties/new': 'Đăng chỗ ở mới',
-  '/host/earnings': 'Thu nhập',
-  '/host/bookings': 'Booking',
-  '/host/reviews': 'Đánh giá',
-  '/properties': 'Chỗ ở',
-  '/bookings': 'Đặt phòng của tôi',
-  '/trips': 'Chuyến đi',
+  '/host/properties': 'Properties',
+  '/host/properties/new': 'List Property',
+  '/host/earnings': 'Earnings',
+  '/host/bookings': 'Bookings',
+  '/host/reviews': 'Reviews',
+  '/properties': 'Properties',
+  '/bookings': 'My Bookings',
+  '/trips': 'My Trips',
 }
 
 export default function Breadcrumb({ 
@@ -53,11 +53,11 @@ export default function Breadcrumb({
     const segments = pathname.split('/').filter(segment => segment !== '')
     
     if (segments.length === 0) {
-      return [{ name: 'Trang chủ', href: '/', current: true }]
+      return [{ name: 'Home', href: '/', current: true }]
     }
 
     const breadcrumbItems: BreadcrumbItem[] = [
-      { name: 'Trang chủ', href: '/' }
+      { name: 'Home', href: '/' }
     ]
 
     let currentPath = ''
@@ -95,7 +95,7 @@ export default function Breadcrumb({
   }
 
   return (
-    <div className={`flex items-center justify-between py-3 ${className}`}>
+    <div className={`flex items-center justify-between py-2 ${className}`}>
       <nav className="flex" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2">
           {breadcrumbItems.map((item, index) => (
@@ -106,7 +106,7 @@ export default function Breadcrumb({
               
               {index > 0 && (
                 <ChevronRightIcon 
-                  className="h-4 w-4 text-gray-400 mx-2" 
+                  className="h-4 w-4 text-gray-300 mx-2" 
                   aria-hidden="true" 
                 />
               )}
@@ -118,7 +118,7 @@ export default function Breadcrumb({
               ) : (
                 <Link 
                   href={item.href}
-                  className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+                  className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
                 >
                   {item.name}
                 </Link>
@@ -131,11 +131,11 @@ export default function Breadcrumb({
       {showBackButton && breadcrumbItems.length > 1 && (
         <button
           onClick={handleGoBack}
-          className="flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors px-3 py-1 rounded-md hover:bg-gray-100"
-          title="Quay lại trang trước"
+          className="flex items-center text-sm text-gray-500 hover:text-gray-900 transition-colors px-3 py-1 rounded-lg hover:bg-gray-50"
+          title="Go back"
         >
           <ArrowLeftIcon className="h-4 w-4 mr-1" />
-          Quay lại
+          Back
         </button>
       )}
     </div>
