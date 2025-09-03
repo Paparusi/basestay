@@ -15,7 +15,6 @@ import {
   BanknotesIcon,
   ClockIcon
 } from '@heroicons/react/24/outline'
-import { ConnectWalletButton } from '@/components/web3/ConnectWalletButton'
 
 // Dynamic imports with loading states
 const FeaturedProperties = dynamic(() => import('@/components/home/FeaturedProperties'), {
@@ -175,7 +174,6 @@ const SearchSection = React.memo(({
 SearchSection.displayName = 'SearchSection'
 
 export default function HomePage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
   const [searchLocation, setSearchLocation] = useState('')
   const [guests, setGuests] = useState(1)
@@ -194,81 +192,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-                <div className="absolute inset-0 opacity-20">
-                  <div className="grid grid-cols-4 gap-px h-full">
-                    {[...Array(16)].map((_, i) => (
-                      <div key={i} className="bg-white/40"></div>
-                    ))}
-                  </div>
-                </div>
-                <div className="relative z-10 flex items-center justify-center">
-                  <div className="text-white text-lg font-bold">₿S</div>
-                </div>
-                <div className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <div className="absolute bottom-1 left-1 w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  BaseStay
-                </span>
-                <span className="text-xs text-gray-500 font-medium">Web3 • Base L2</span>
-              </div>
-            </Link>
-            
-            <div className="hidden md:flex items-center space-x-8">
-              <Link href="/properties" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                Explore
-              </Link>
-              <Link href="/host" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                Become a Host
-              </Link>
-              <div className="flex items-center space-x-3">
-                <ConnectWalletButton />
-              </div>
-            </div>
-
-            <div className="md:hidden flex items-center space-x-3">
-              <ConnectWalletButton />
-              <button 
-                className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          
-          {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200 bg-white">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                <Link 
-                  href="/properties" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Explore
-                </Link>
-                <Link 
-                  href="/host" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Become a Host
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
       {/* Hero Section with Search */}
       <SearchSection 
         searchLocation={searchLocation}
