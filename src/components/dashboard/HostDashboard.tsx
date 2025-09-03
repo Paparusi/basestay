@@ -61,7 +61,25 @@ interface DashboardStats {
   totalViews: number
 }
 
-export default function HostDashboard() {
+// Component để hiển thị khi chưa connect wallet
+function ConnectWalletPrompt() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Connect Your Wallet</h2>
+        <p className="text-gray-600 mb-6">
+          Connect your wallet to access your host dashboard and manage your properties.
+        </p>
+        <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          Connect Wallet
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Main dashboard component
+function HostDashboardContent() {
   const { address, isConnected } = useAccount()
   
   const [activeTab, setActiveTab] = useState('overview')
@@ -149,19 +167,7 @@ export default function HostDashboard() {
   }
 
   if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Connect Your Wallet</h2>
-          <p className="text-gray-600 mb-6">
-            Connect your wallet to access your host dashboard and manage your properties.
-          </p>
-          <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Connect Wallet
-          </button>
-        </div>
-      </div>
-    )
+    return <ConnectWalletPrompt />
   }
 
   return (
@@ -639,4 +645,15 @@ export default function HostDashboard() {
       </div>
     </div>
   )
+}
+
+// Main export - wrapper component to avoid hooks rule violations  
+export default function HostDashboard() {
+  const { isConnected } = useAccount()
+  
+  if (!isConnected) {
+    return <ConnectWalletPrompt />
+  }
+  
+  return <HostDashboardContent />
 }
