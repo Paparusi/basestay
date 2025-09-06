@@ -15,6 +15,8 @@ import {
   BanknotesIcon,
   ClockIcon
 } from '@heroicons/react/24/outline'
+import { useMobileDetection } from '@/hooks/useMobileDetection'
+import { App } from 'konsta/react'
 
 // Dynamic imports with loading states
 const FeaturedProperties = dynamic(() => import('@/components/home/FeaturedProperties'), {
@@ -179,6 +181,7 @@ export default function HomePage() {
   const [guests, setGuests] = useState(1)
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
+  const isMobile = useMobileDetection()
 
   const handleSearch = () => {
     const params = new URLSearchParams({
@@ -188,6 +191,19 @@ export default function HomePage() {
       checkOut: checkOut || ''
     })
     router.push(`/properties?${params}`)
+  }
+
+  // Mobile experience with Konsta UI
+  if (isMobile) {
+    const SimpleMobileHomePage = dynamic(() => import('@/components/mobile/SimpleMobileHomePage'), {
+      ssr: false
+    })
+    
+    return (
+      <App theme="ios" safeAreas>
+        <SimpleMobileHomePage />
+      </App>
+    )
   }
 
   return (
